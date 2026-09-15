@@ -76,61 +76,106 @@
         z-index: 1000;
       }
 
-      .navbar {
-        height: 76px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
+    .navbar {
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
 
-     .logo {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    text-decoration: none;
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  flex-shrink: 0;
 }
 
 .logo img {
-    width: 70px;
-    height: 70px;
-    object-fit: contain;
-    display: block;
-    
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  display: block;
 }
 
 .brand-text {
-    font-family: "Georgia", serif;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    color: #C9A45C;
-    white-space: nowrap;
+  font-family: Georgia, serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #C9A45C;
+  white-space: nowrap;
 }
 
-      .nav-links {
-        display: flex;
-        gap: 30px;
-        align-items: center;
-      }
+    .nav-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
 
-      .nav-links a {
-        font-size: 14px;
-        font-weight: 600;
-        transition: 0.3s;
-      }
+.nav-links a {
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.3s;
+}
 
-      .nav-links a:hover {
-        color: #a75d69;
-      }
+.nav-links a:hover {
+  color: #a75d69;
+}
 
-      .cart-btn {
-        border: 1px solid #eadfdb;
-        background: white;
-        padding: 10px 17px;
-        border-radius: 25px;
-        cursor: pointer;
-        font-weight: 600;
-      }
+
+     .nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cart-btn {
+  border: 1px solid #eadfdb;
+  background: white;
+  padding: 10px 15px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.menu-toggle {
+  display: none;
+  border: 1px solid #eadfdb;
+  background: white;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  font-size: 22px;
+  cursor: pointer;
+  color: #241d1f;
+}
+
+
+.mobile-menu {
+  display: none;
+  background: white;
+  border-top: 1px solid #eadfdb;
+  padding: 12px 5%;
+}
+
+.mobile-menu a {
+  display: block;
+  padding: 13px 0;
+  border-bottom: 1px solid #f0e8e5;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.mobile-menu a:last-child {
+  border-bottom: none;
+}
+
+.mobile-menu.active {
+  display: block;
+}
 
       /* =========================
            HERO
@@ -1045,6 +1090,129 @@
         letter-spacing: 1px;
     }
 }
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1000px) {
+
+  .nav-links {
+    gap: 15px;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+  }
+
+  .nav-actions {
+    gap: 5px;
+  }
+
+  .cart-btn {
+    padding: 9px 11px;
+    font-size: 12px;
+  }
+
+  .logo img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .brand-text {
+    font-size: 14px;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+  .navbar {
+    min-height: 65px;
+    gap: 10px;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .nav-actions {
+    margin-left: auto;
+  }
+
+  .track-btn {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo {
+    gap: 7px;
+    min-width: 0;
+  }
+
+  .logo img {
+    width: 52px;
+    height: 52px;
+  }
+
+  .brand-text {
+    font-size: 12px;
+    letter-spacing: 0.7px;
+  }
+
+  .cart-btn {
+    padding: 8px 11px;
+    font-size: 12px;
+  }
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 420px) {
+
+  .container {
+    width: 94%;
+  }
+
+  .navbar {
+    min-height: 60px;
+  }
+
+  .logo img {
+    width: 46px;
+    height: 46px;
+  }
+
+  .brand-text {
+    font-size: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  .cart-btn {
+    padding: 7px 9px;
+    font-size: 11px;
+  }
+
+  .menu-toggle {
+    width: 38px;
+    height: 38px;
+    font-size: 20px;
+  }
+}
+
     </style>
   </head>
 
@@ -1061,34 +1229,53 @@
          NAVBAR
     ========================== -->
 
-    <header>
-      <div class="container navbar">
-        <a href="#" class="logo">
-    <img src="assets/noore-logo.png" alt="NOORÉ Logo">
-    <span class="brand-text">SHEIKH BROTHERS</span>
-</a>
+<header>
+  <div class="container navbar">
+    <a href="#" class="logo">
+      <img src="assets/noore-logo.png" alt="NOORÉ Logo">
+      <span class="brand-text">SHEIKH BROTHERS</span>
+    </a>
 
-        <nav class="nav-links">
-          <a href="#shop">Shop</a>
-          <a href="#new">New Arrivals</a>
-          <a href="#about">About</a>
-          <a href="#contact">Contact</a>
-        </nav>
+    <nav class="nav-links">
+      <a href="#shop">Shop</a>
+      <a href="#new">New Arrivals</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
 
-        <button class="cart-btn" onclick="openCart()">
-          🛒 Cart
-          <span id="cartCount" class="cart-count">0</span>
-        </button>
+    <div class="nav-actions">
+      <button class="cart-btn" onclick="openCart()">
+        🛒 Cart
+        <span id="cartCount" class="cart-count">0</span>
+      </button>
 
-        <a
-          href="track-order.html"
-          class="cart-btn"
-          style="text-decoration: none"
-        >
-          📦 Track Order
-        </a>
-      </div>
-    </header>
+      <a href="track-order.html" class="cart-btn track-btn">
+        📦 Track Order
+      </a>
+    </div>
+
+    <button
+      class="menu-toggle"
+      id="menuToggle"
+      type="button"
+      aria-label="Open menu"
+      onclick="toggleMobileMenu()"
+    >
+      ☰
+    </button>
+  </div>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#shop" onclick="closeMobileMenu()">Shop</a>
+    <a href="#new" onclick="closeMobileMenu()">New Arrivals</a>
+    <a href="#about" onclick="closeMobileMenu()">About</a>
+    <a href="#contact" onclick="closeMobileMenu()">Contact</a>
+
+    <a href="track-order.html" onclick="closeMobileMenu()">
+      📦 Track Order
+    </a>
+  </div>
+</header>
 
     <main>
       <!-- =========================
@@ -1856,6 +2043,27 @@
           }
         });
       }
+
+      /* =========================
+   MOBILE MENU
+========================= */
+
+function toggleMobileMenu() {
+  const menu = document.getElementById("mobileMenu");
+
+  if (!menu) return;
+
+  menu.classList.toggle("active");
+}
+
+
+function closeMobileMenu() {
+  const menu = document.getElementById("mobileMenu");
+
+  if (!menu) return;
+
+  menu.classList.remove("active");
+}
     </script>
   </body>
 </html>
