@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>NOORÉ | Admin Login</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        font-family: "DM Sans", sans-serif;
+        background: #fffaf7;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        color: #241d1f;
+      }
+
+      .login-wrapper {
+        width: 100%;
+        max-width: 430px;
+      }
+
+      .logo {
+        text-align: center;
+        font-family: "Playfair Display", serif;
+        font-size: 38px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        margin-bottom: 8px;
+      }
+
+      .admin-title {
+        text-align: center;
+        color: #766b6e;
+        font-size: 14px;
+        margin-bottom: 25px;
+      }
+
+      .login-card {
+        background: #ffffff;
+        border: 1px solid #eadfdb;
+        border-radius: 18px;
+        padding: 35px;
+        box-shadow: 0 15px 40px rgba(36, 29, 31, 0.08);
+      }
+
+      .login-card h1 {
+        font-family: "Playfair Display", serif;
+        font-size: 28px;
+        margin-bottom: 8px;
+      }
+
+      .login-card > p {
+        color: #766b6e;
+        font-size: 14px;
+        margin-bottom: 25px;
+      }
+
+      .form-group {
+        margin-bottom: 18px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 7px;
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 13px 14px;
+        border: 1px solid #ded4d1;
+        border-radius: 8px;
+        outline: none;
+        font-family: inherit;
+        font-size: 14px;
+        transition: 0.3s;
+      }
+
+      .form-control:focus {
+        border-color: #a75d69;
+        box-shadow: 0 0 0 3px rgba(167, 93, 105, 0.1);
+      }
+
+      .login-btn {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 8px;
+        background: #a75d69;
+        color: white;
+        font-family: inherit;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .login-btn:hover {
+        background: #8e4b58;
+      }
+
+      .error-message {
+        display: none;
+        background: #fff1f1;
+        border: 1px solid #f0caca;
+        color: #b42318;
+        padding: 11px;
+        border-radius: 7px;
+        font-size: 13px;
+        margin-bottom: 15px;
+      }
+
+      .footer-text {
+        text-align: center;
+        color: #9a8e91;
+        font-size: 12px;
+        margin-top: 20px;
+      }
+
+      @media (max-width: 500px) {
+        .login-card {
+          padding: 25px 20px;
+        }
+
+        .logo {
+          font-size: 32px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="login-wrapper">
+      <div class="logo">NOORÉ</div>
+
+      <div class="admin-title">Ladies Suits • Admin Panel</div>
+
+      <div class="login-card">
+        <h1>Welcome Back</h1>
+
+        <p>Login to manage your products and orders.</p>
+
+        <div id="errorMessage" class="error-message">
+          Invalid email or password.
+        </div>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="email"> Email Address </label>
+
+            <input
+              type="email"
+              id="email"
+              class="form-control"
+              placeholder="admin@noore.com"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password"> Password </label>
+
+            <input
+              type="password"
+              id="password"
+              class="form-control"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+
+          <button type="submit" class="login-btn">Login to Admin</button>
+        </form>
+      </div>
+
+      <div class="footer-text">© 2026 NOORÉ. All rights reserved.</div>
+    </div>
+
+    <script>
+      document
+        .getElementById("loginForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const email = document.getElementById("email").value.trim();
+
+          const password = document.getElementById("password").value;
+
+          const errorMessage = document.getElementById("errorMessage");
+
+          /*
+           * Temporary login
+           * Database authentication baad mein connect karenge.
+           */
+
+          if (email === "admin@noore.com" && password === "admin123") {
+            localStorage.setItem("nooreAdminLoggedIn", "true");
+
+            window.location.href = "index.html";
+          } else {
+            errorMessage.style.display = "block";
+          }
+        });
+    </script>
+  </body>
+</html>

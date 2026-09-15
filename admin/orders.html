@@ -1,0 +1,1411 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>NOORÉ | Orders</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --sidebar: #241d1f;
+        --sidebar-light: #32282a;
+        --primary: #a75d69;
+        --primary-dark: #8d4c58;
+        --bg: #fffaf7;
+        --white: #ffffff;
+        --text: #292426;
+        --muted: #817579;
+        --border: #eee4e1;
+
+        --pending: #d89b20;
+        --confirmed: #0d6efd;
+        --shipped: #6f42c1;
+        --delivered: #198754;
+        --cancelled: #dc3545;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      button,
+      input,
+      select {
+        font-family: inherit;
+      }
+
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 250px;
+        height: 100vh;
+        background: var(--sidebar);
+        color: #fff;
+        padding: 25px 16px;
+        z-index: 1000;
+      }
+
+      .logo {
+        font-family: "Playfair Display", serif;
+        font-size: 28px;
+        text-align: center;
+        margin-bottom: 35px;
+        letter-spacing: 2px;
+      }
+
+      .logo span {
+        color: #d9a3ac;
+      }
+
+      .nav-title {
+        font-size: 11px;
+        color: #9d9295;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        padding: 0 14px;
+        margin-bottom: 10px;
+      }
+
+      .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 13px 14px;
+        border-radius: 9px;
+        color: #d7ced0;
+        margin-bottom: 5px;
+        font-size: 14px;
+        transition: 0.2s;
+      }
+
+      .nav-link:hover {
+        background: var(--sidebar-light);
+        color: #fff;
+      }
+
+      .nav-link.active {
+        background: var(--primary);
+        color: #fff;
+      }
+
+      .nav-icon {
+        width: 20px;
+        text-align: center;
+      }
+
+      .logout {
+        position: absolute;
+        bottom: 25px;
+        left: 16px;
+        right: 16px;
+        cursor: pointer;
+      }
+
+      .main {
+        margin-left: 250px;
+        min-height: 100vh;
+        padding: 30px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 28px;
+      }
+
+      .page-title h1 {
+        font-family: "Playfair Display", serif;
+        font-size: 32px;
+        margin-bottom: 5px;
+      }
+
+      .page-title p {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .mobile-menu {
+        display: none;
+        border: none;
+        background: var(--sidebar);
+        color: #fff;
+        width: 42px;
+        height: 42px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 20px;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+        margin-bottom: 25px;
+      }
+
+      .stat-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 13px;
+        padding: 17px;
+      }
+
+      .stat-card p {
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 7px;
+      }
+
+      .stat-card h2 {
+        font-size: 25px;
+      }
+
+      .pending-number {
+        color: var(--pending);
+      }
+
+      .confirmed-number {
+        color: var(--confirmed);
+      }
+
+      .shipped-number {
+        color: var(--shipped);
+      }
+
+      .delivered-number {
+        color: var(--delivered);
+      }
+
+      .orders-box {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+
+      .box-header {
+        padding: 18px 20px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+      }
+
+      .box-header h3 {
+        font-size: 17px;
+      }
+
+      .filters {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .search {
+        width: 250px;
+        padding: 10px 13px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        outline: none;
+      }
+
+      .status-filter {
+        padding: 10px 13px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        outline: none;
+        background: #fff;
+        cursor: pointer;
+      }
+
+      .search:focus,
+      .status-filter:focus {
+        border-color: var(--primary);
+      }
+
+      .table-wrapper {
+        width: 100%;
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 1300px;
+      }
+
+      th,
+      td {
+        padding: 14px 15px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+        font-size: 13px;
+        vertical-align: middle;
+      }
+
+      th {
+        background: #fffaf8;
+        color: var(--muted);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      .order-id {
+        font-weight: 700;
+        color: var(--primary-dark);
+      }
+
+      .customer-name {
+        font-weight: 600;
+        margin-bottom: 3px;
+      }
+
+      .phone {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .address {
+        max-width: 200px;
+        line-height: 1.5;
+      }
+
+      .product {
+        font-weight: 600;
+        max-width: 180px;
+      }
+
+      .size {
+        display: inline-block;
+        background: #f5eeee;
+        color: var(--primary-dark);
+        padding: 5px 9px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .total {
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .date {
+        color: var(--muted);
+        white-space: nowrap;
+        font-size: 12px;
+      }
+
+      .status-select {
+        border: none;
+        outline: none;
+        padding: 7px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .status-select.pending {
+        background: #fff4d9;
+        color: #9a6b00;
+      }
+
+      .status-select.confirmed {
+        background: #e7f0ff;
+        color: #0757bd;
+      }
+
+      .status-select.shipped {
+        background: #eee8fa;
+        color: #5b32a0;
+      }
+
+      .status-select.delivered {
+        background: #e4f7ed;
+        color: #14703f;
+      }
+
+      .status-select.cancelled {
+        background: #fde7e9;
+        color: #b42332;
+      }
+
+      /* WHATSAPP BUTTON */
+
+      .whatsapp-btn {
+        border: none;
+        background: #25d366;
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 7px;
+        font-size: 11px;
+        font-weight: 700;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: 0.2s;
+      }
+
+      .whatsapp-btn:hover {
+        background: #1ebe5d;
+        transform: translateY(-1px);
+      }
+
+      .loading,
+      .empty {
+        padding: 50px 20px;
+        text-align: center;
+        color: var(--muted);
+      }
+
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(20, 15, 17, 0.65);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        z-index: 2000;
+      }
+
+      .modal-overlay.show {
+        display: flex;
+      }
+
+      .modal {
+        width: 100%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        background: #fff;
+        border-radius: 15px;
+        padding: 25px;
+      }
+
+      .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+
+      .modal-header h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 25px;
+      }
+
+      .close {
+        border: none;
+        background: #f4eeee;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 18px;
+      }
+
+      .details {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .detail-box {
+        background: #fffaf8;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        padding: 13px;
+      }
+
+      .detail-box.full {
+        grid-column: 1 / -1;
+      }
+
+      .detail-label {
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+      }
+
+      .detail-value {
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.5;
+      }
+
+      .modal-whatsapp {
+        margin-top: 20px;
+        width: 100%;
+        border: none;
+        background: #25d366;
+        color: #fff;
+        padding: 13px;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .modal-whatsapp:hover {
+        background: #1ebe5d;
+      }
+
+      @media (max-width: 1100px) {
+        .stats {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      @media (max-width: 900px) {
+        .sidebar {
+          transform: translateX(-100%);
+          transition: 0.3s;
+        }
+
+        .sidebar.open {
+          transform: translateX(0);
+        }
+
+        .main {
+          margin-left: 0;
+          padding: 20px;
+        }
+
+        .mobile-menu {
+          display: block;
+        }
+
+        .topbar {
+          align-items: flex-start;
+        }
+
+        .box-header {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .filters {
+          width: 100%;
+        }
+
+        .search {
+          flex: 1;
+          width: auto;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .main {
+          padding: 15px;
+        }
+
+        .topbar {
+          flex-wrap: wrap;
+        }
+
+        .page-title h1 {
+          font-size: 26px;
+        }
+
+        .stats {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .filters {
+          flex-direction: column;
+        }
+
+        .search,
+        .status-filter {
+          width: 100%;
+        }
+
+        .details {
+          grid-template-columns: 1fr;
+        }
+
+        .detail-box.full {
+          grid-column: auto;
+        }
+
+        .modal {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar" id="sidebar">
+      <div class="logo">NOOR<span>É</span></div>
+
+      <div class="nav-title">Management</div>
+
+      <a href="index.html" class="nav-link">
+        <span class="nav-icon">⌂</span>
+        Dashboard
+      </a>
+
+      <a href="products.html" class="nav-link">
+        <span class="nav-icon">◈</span>
+        Products
+      </a>
+
+      <a href="orders.html" class="nav-link active">
+        <span class="nav-icon">▣</span>
+        Orders
+      </a>
+
+      <div class="nav-title" style="margin-top: 25px">Store</div>
+
+      <a href="../frontend/index.html" target="_blank" class="nav-link">
+        <span class="nav-icon">↗</span>
+        View Website
+      </a>
+
+      <div class="nav-link logout" onclick="logout()">
+        <span class="nav-icon">↪</span>
+        Logout
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+
+    <main class="main">
+      <div class="topbar">
+        <div style="display: flex; align-items: center; gap: 15px">
+          <button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+
+          <div class="page-title">
+            <h1>Orders</h1>
+
+            <p>Manage customer orders and delivery status.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATS -->
+
+      <div class="stats">
+        <div class="stat-card">
+          <p>Total Orders</p>
+          <h2 id="totalOrders">0</h2>
+        </div>
+
+        <div class="stat-card">
+          <p>Pending</p>
+          <h2 id="pendingOrders" class="pending-number">0</h2>
+        </div>
+
+        <div class="stat-card">
+          <p>Confirmed</p>
+          <h2 id="confirmedOrders" class="confirmed-number">0</h2>
+        </div>
+
+        <div class="stat-card">
+          <p>Shipped</p>
+          <h2 id="shippedOrders" class="shipped-number">0</h2>
+        </div>
+
+        <div class="stat-card">
+          <p>Delivered</p>
+          <h2 id="deliveredOrders" class="delivered-number">0</h2>
+        </div>
+      </div>
+
+      <!-- ORDERS -->
+
+      <section class="orders-box">
+        <div class="box-header">
+          <h3>All Orders</h3>
+
+          <div class="filters">
+            <input
+              type="search"
+              id="searchInput"
+              class="search"
+              placeholder="Search name, phone, city..."
+              oninput="filterOrders()"
+            />
+
+            <select
+              id="statusFilter"
+              class="status-filter"
+              onchange="filterOrders()"
+            >
+              <option value="">All Status</option>
+
+              <option value="Pending">Pending</option>
+
+              <option value="Confirmed">Confirmed</option>
+
+              <option value="Shipped">Shipped</option>
+
+              <option value="Delivered">Delivered</option>
+
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Order</th>
+                <th>Customer</th>
+                <th>City</th>
+                <th>Address</th>
+                <th>Product</th>
+                <th>Size</th>
+                <th>Qty</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>WhatsApp</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+
+            <tbody id="ordersTable">
+              <tr>
+                <td colspan="11" class="loading">Loading orders...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <!-- ORDER DETAILS MODAL -->
+
+    <div class="modal-overlay" id="orderModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>Order Details</h2>
+
+          <button class="close" onclick="closeModal()">×</button>
+        </div>
+
+        <div class="details" id="orderDetails"></div>
+
+        <button
+          id="modalWhatsappButton"
+          class="modal-whatsapp"
+          onclick="sendModalWhatsApp()"
+        >
+          WhatsApp Customer
+        </button>
+      </div>
+    </div>
+
+    <script>
+      /* ================= AUTH ================= */
+
+      if (localStorage.getItem("nooreAdminLoggedIn") !== "true") {
+        window.location.href = "login.html";
+      }
+
+      /* ================= API ================= */
+
+      const API_URL = "https://noore-n2oa.vercel.app/api";
+
+      const TRACKING_URL = "https://noore-eta.vercel.app/track-order.html";
+
+      let orders = [];
+
+      let selectedOrder = null;
+
+      /* ================= LOAD ORDERS ================= */
+
+      async function loadOrders() {
+        try {
+          const response = await fetch(`${API_URL}/orders`);
+
+          if (!response.ok) {
+            throw new Error("Failed to load orders");
+          }
+
+          orders = await response.json();
+
+          updateStats();
+
+          filterOrders();
+        } catch (error) {
+          console.error(error);
+
+          document.getElementById("ordersTable").innerHTML = `
+
+        <tr>
+
+          <td
+            colspan="11"
+            class="empty"
+          >
+
+            Failed to load orders.
+
+            <br>
+
+            Make sure backend server
+            is running.
+
+          </td>
+
+        </tr>
+
+      `;
+        }
+      }
+
+      /* ================= DISPLAY ORDERS ================= */
+
+      function displayOrders(list) {
+        const table = document.getElementById("ordersTable");
+
+        if (!list.length) {
+          table.innerHTML = `
+
+        <tr>
+
+          <td
+            colspan="11"
+            class="empty"
+          >
+
+            No orders found.
+
+          </td>
+
+        </tr>
+
+      `;
+
+          return;
+        }
+
+        table.innerHTML = list
+          .map((order) => {
+            return `
+
+            <tr>
+
+              <td>
+
+                <div
+                  class="order-id"
+                  style="cursor:pointer;"
+                  onclick="openOrderDetails(${order.id})"
+                >
+
+                  #${order.id}
+
+                </div>
+
+              </td>
+
+
+              <td>
+
+                <div class="customer-name">
+
+                  ${escapeHTML(order.customerName)}
+
+                </div>
+
+                <div class="phone">
+
+                  ${escapeHTML(order.phone)}
+
+                </div>
+
+              </td>
+
+
+              <td>
+
+                ${escapeHTML(order.city)}
+
+              </td>
+
+
+              <td>
+
+                <div
+                  class="address"
+                  title="${escapeHTML(order.address)}"
+                >
+
+                  ${escapeHTML(order.address)}
+
+                </div>
+
+              </td>
+
+
+              <td>
+
+                <div class="product">
+
+                  ${escapeHTML(order.product)}
+
+                </div>
+
+              </td>
+
+
+              <td>
+
+                <span class="size">
+
+                  ${escapeHTML(order.size)}
+
+                </span>
+
+              </td>
+
+
+              <td>
+
+                ${order.quantity}
+
+              </td>
+
+
+              <td>
+
+                <span class="total">
+
+                  PKR ${Number(order.totalPrice).toLocaleString()}
+
+                </span>
+
+              </td>
+
+
+              <td>
+
+                <select
+                  class="status-select ${getStatusClass(order.status)}"
+                  onchange="updateStatus(
+                    ${order.id},
+                    this.value,
+                    this
+                  )"
+                >
+
+                  <option
+                    value="Pending"
+                    ${order.status === "Pending" ? "selected" : ""}
+                  >
+                    Pending
+                  </option>
+
+                  <option
+                    value="Confirmed"
+                    ${order.status === "Confirmed" ? "selected" : ""}
+                  >
+                    Confirmed
+                  </option>
+
+                  <option
+                    value="Shipped"
+                    ${order.status === "Shipped" ? "selected" : ""}
+                  >
+                    Shipped
+                  </option>
+
+                  <option
+                    value="Delivered"
+                    ${order.status === "Delivered" ? "selected" : ""}
+                  >
+                    Delivered
+                  </option>
+
+                  <option
+                    value="Cancelled"
+                    ${order.status === "Cancelled" ? "selected" : ""}
+                  >
+                    Cancelled
+                  </option>
+
+                </select>
+
+              </td>
+
+
+              <td>
+
+                <button
+                  class="whatsapp-btn"
+                  onclick="sendWhatsApp(${order.id})"
+                >
+
+                  WhatsApp
+
+                </button>
+
+              </td>
+
+
+              <td>
+
+                <div class="date">
+
+                  ${formatDate(order.createdAt)}
+
+                </div>
+
+              </td>
+
+            </tr>
+
+          `;
+          })
+          .join("");
+      }
+
+      /* ================= STATUS UPDATE ================= */
+
+      async function updateStatus(id, status, selectElement) {
+        try {
+          selectElement.disabled = true;
+
+          const response = await fetch(`${API_URL}/orders/${id}`, {
+            method: "PUT",
+
+            headers: {
+              "Content-Type": "application/json",
+            },
+
+            body: JSON.stringify({
+              status: status,
+            }),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.message || "Failed to update status");
+          }
+
+          const order = orders.find((item) => Number(item.id) === Number(id));
+
+          if (order) {
+            order.status = status;
+          }
+
+          selectElement.className = `status-select ${getStatusClass(status)}`;
+
+          updateStats();
+
+          alert(`Order #${id} status updated to ${status}`);
+        } catch (error) {
+          console.error(error);
+
+          alert("Error: " + error.message);
+
+          loadOrders();
+        } finally {
+          selectElement.disabled = false;
+        }
+      }
+
+      /* ================= WHATSAPP ================= */
+
+      function sendWhatsApp(id) {
+        const order = orders.find((item) => Number(item.id) === Number(id));
+
+        if (!order) {
+          alert("Order not found.");
+
+          return;
+        }
+
+        const phone = cleanPhoneNumber(order.phone);
+
+        if (!phone) {
+          alert("Customer phone number is missing.");
+
+          return;
+        }
+
+        const message = createWhatsAppMessage(order);
+
+        const whatsappURL = `https://wa.me/${phone}?text=${encodeURIComponent(
+          message,
+        )}`;
+
+        window.open(whatsappURL, "_blank");
+      }
+
+      function sendModalWhatsApp() {
+        if (!selectedOrder) {
+          return;
+        }
+
+        sendWhatsApp(selectedOrder.id);
+      }
+
+      function createWhatsAppMessage(order) {
+        return `Assalam-o-Alaikum ${order.customerName},
+
+Your NOORÉ order update:
+
+Order ID: #${order.id}
+Product: ${order.product}
+Size: ${order.size}
+Quantity: ${order.quantity}
+Total: PKR ${Number(order.totalPrice).toLocaleString()}
+
+Order Status: ${order.status}
+
+You can track your order here:
+${TRACKING_URL}
+
+For tracking, use your Order ID and phone number.
+
+Thank you for shopping with NOORÉ.`;
+      }
+
+      function cleanPhoneNumber(phone) {
+        let number = String(phone || "").replace(/\D/g, "");
+
+        if (number.startsWith("00")) {
+          number = number.substring(2);
+        }
+
+        if (number.startsWith("0")) {
+          number = "92" + number.substring(1);
+        }
+
+        return number;
+      }
+
+      /* ================= FILTER ================= */
+
+      function filterOrders() {
+        const search = document
+          .getElementById("searchInput")
+          .value.toLowerCase()
+          .trim();
+
+        const status = document.getElementById("statusFilter").value;
+
+        const filtered = orders.filter((order) => {
+          const matchesSearch =
+            String(order.id).includes(search) ||
+            String(order.customerName || "")
+              .toLowerCase()
+              .includes(search) ||
+            String(order.phone || "")
+              .toLowerCase()
+              .includes(search) ||
+            String(order.city || "")
+              .toLowerCase()
+              .includes(search) ||
+            String(order.product || "")
+              .toLowerCase()
+              .includes(search);
+
+          const matchesStatus = !status || order.status === status;
+
+          return matchesSearch && matchesStatus;
+        });
+
+        displayOrders(filtered);
+      }
+
+      /* ================= STATS ================= */
+
+      function updateStats() {
+        document.getElementById("totalOrders").textContent = orders.length;
+
+        document.getElementById("pendingOrders").textContent =
+          countStatus("Pending");
+
+        document.getElementById("confirmedOrders").textContent =
+          countStatus("Confirmed");
+
+        document.getElementById("shippedOrders").textContent =
+          countStatus("Shipped");
+
+        document.getElementById("deliveredOrders").textContent =
+          countStatus("Delivered");
+      }
+
+      function countStatus(status) {
+        return orders.filter((order) => order.status === status).length;
+      }
+
+      /* ================= STATUS CLASS ================= */
+
+      function getStatusClass(status) {
+        return String(status || "").toLowerCase();
+      }
+
+      /* ================= DATE ================= */
+
+      function formatDate(date) {
+        if (!date) {
+          return "-";
+        }
+
+        const d = new Date(date);
+
+        if (isNaN(d.getTime())) {
+          return date;
+        }
+
+        return d.toLocaleDateString("en-PK", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        });
+      }
+
+      /* ================= ESCAPE HTML ================= */
+
+      function escapeHTML(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+
+          .replace(/</g, "&lt;")
+
+          .replace(/>/g, "&gt;")
+
+          .replace(/"/g, "&quot;")
+
+          .replace(/'/g, "&#039;");
+      }
+
+      /* ================= SIDEBAR ================= */
+
+      function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("open");
+      }
+
+      /* ================= LOGOUT ================= */
+
+      function logout() {
+        localStorage.removeItem("nooreAdminLoggedIn");
+
+        window.location.href = "login.html";
+      }
+
+      /* ================= MODAL ================= */
+
+      function openOrderDetails(id) {
+        const order = orders.find((item) => Number(item.id) === Number(id));
+
+        if (!order) {
+          return;
+        }
+
+        selectedOrder = order;
+
+        document.getElementById("orderDetails").innerHTML = `
+
+      <div class="detail-box">
+
+        <span class="detail-label">
+          Order ID
+        </span>
+
+        <div class="detail-value">
+          #${order.id}
+        </div>
+
+      </div>
+
+
+      <div class="detail-box">
+
+        <span class="detail-label">
+          Status
+        </span>
+
+        <div class="detail-value">
+          ${escapeHTML(order.status)}
+        </div>
+
+      </div>
+
+
+      <div class="detail-box">
+
+        <span class="detail-label">
+          Customer
+        </span>
+
+        <div class="detail-value">
+          ${escapeHTML(order.customerName)}
+        </div>
+
+      </div>
+
+
+      <div class="detail-box">
+
+        <span class="detail-label">
+          Phone
+        </span>
+
+        <div class="detail-value">
+          ${escapeHTML(order.phone)}
+        </div>
+
+      </div>
+
+
+      <div class="detail-box">
+
+        <span class="detail-label">
+          City
+        </span>
+
+        <div class="detail-value">
+          ${escapeHTML(order.city)}
+        </div>
+
+      </div>
+
+
+      <div class="detail-box">
+
+        <span class="detail-label">
+          Size
+        </span>
+
+        <div class="detail-value">
+          ${escapeHTML(order.size)}
+        </div>
+
+      </div>
+
+
+      <div class="detail-box full">
+
+        <span class="detail-label">
+          Delivery Address
+        </span>
+
+        <div class="detail-value">
+          ${escapeHTML(order.address)}
+        </div>
+
+      </div>
+
+
+      <div class="detail-box">
+
+        <span class="detail-label">
+          Product
+        </span>
+
+        <div class="detail-value">
+          ${escapeHTML(order.product)}
+        </div>
+
+      </div>
+
+
+      <div class="detail-box">
+
+        <span class="detail-label">
+          Quantity
+        </span>
+
+        <div class="detail-value">
+          ${order.quantity}
+        </div>
+
+      </div>
+
+
+      <div class="detail-box">
+
+        <span class="detail-label">
+          Total Price
+        </span>
+
+        <div class="detail-value">
+          PKR ${Number(order.totalPrice).toLocaleString()}
+        </div>
+
+      </div>
+
+
+      <div class="detail-box">
+
+        <span class="detail-label">
+          Order Date
+        </span>
+
+        <div class="detail-value">
+          ${formatDate(order.createdAt)}
+        </div>
+
+      </div>
+
+    `;
+
+        document.getElementById("orderModal").classList.add("show");
+      }
+
+      function closeModal() {
+        document.getElementById("orderModal").classList.remove("show");
+
+        selectedOrder = null;
+      }
+
+      document
+        .getElementById("orderModal")
+        .addEventListener("click", function (event) {
+          if (event.target === this) {
+            closeModal();
+          }
+        });
+
+      /* ================= START ================= */
+
+      loadOrders();
+    </script>
+  </body>
+</html>
