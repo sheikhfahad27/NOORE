@@ -1394,6 +1394,124 @@
   border-color: #a75d69;
   color: #fff;
 }
+
+
+
+/* =========================
+   NOORE PREMIUM ALERT
+========================= */
+
+.noore-alert-popup {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+
+  width: 390px;
+  max-width: calc(100vw - 30px);
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 17px 18px;
+
+  background: #171717;
+  color: #fff;
+
+  border: 1px solid #c9a45c;
+  border-radius: 16px;
+
+  box-shadow: 0 20px 55px rgba(0,0,0,.35);
+
+  z-index: 999999;
+
+  opacity: 0;
+  transform: translateX(120%);
+
+  transition:
+    opacity .4s ease,
+    transform .4s cubic-bezier(.22,1,.36,1);
+}
+
+.noore-alert-popup.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.noore-alert-icon {
+  width: 45px;
+  height: 45px;
+  min-width: 45px;
+
+  border-radius: 50%;
+
+  background: #c9a45c;
+  color: #171717;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 22px;
+  font-weight: 800;
+
+  box-shadow: 0 0 0 6px rgba(201,164,92,.10);
+}
+
+.noore-alert-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.noore-alert-title {
+  font-family: "Playfair Display", serif;
+
+  color: #c9a45c;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  margin-bottom: 4px;
+}
+
+.noore-alert-message {
+  color: #f5f2eb;
+
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.noore-alert-close {
+  border: none;
+  background: transparent;
+
+  color: #aaa;
+
+  font-size: 24px;
+
+  cursor: pointer;
+
+  width: 30px;
+  height: 30px;
+}
+
+.noore-alert-close:hover {
+  color: #c9a45c;
+}
+
+@media (max-width: 600px) {
+
+  .noore-alert-popup {
+    top: 15px;
+    right: 15px;
+    left: 15px;
+
+    width: auto;
+    max-width: none;
+  }
+
+}
+
 </style>
   </head>
 
@@ -1674,7 +1792,7 @@
             ></textarea>
           </div>
 
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label> Size </label>
 
             <select id="customerSize" class="form-control">
@@ -1688,7 +1806,7 @@
 
               <option>XL</option>
             </select>
-          </div>
+          </div> -->
 
           <button type="submit" class="primary-btn full-btn">
             Confirm Order on WhatsApp
@@ -1788,20 +1906,16 @@
           </div>
 
           <div class="form-group">
-            <label>Size</label>
+            <label>Suit Type</label>
 
             <select id="checkoutSize" class="form-control" required>
-              <option value="">Confirm Size</option>
+              <!-- <option value="">Confirm Size</option> -->
 
-              <option value="Small">UT</option>
+              <option value="Small">Unstitched</option>
 
-              <option value="Small">Small</option>
+              <option value="Small">Stitched</option>
 
-              <option value="Medium">Medium</option>
-
-              <option value="Large">Large</option>
-
-              <option value="XL">XL</option>
+              
             </select>
           </div>
 
@@ -1895,6 +2009,71 @@
 </div>
 
     <script>
+
+/* =========================
+   PREMIUM ALERT POPUP
+========================= */
+
+window.alert = function(message) {
+
+  const oldPopup = document.getElementById("nooreAlertPopup");
+
+  if (oldPopup) {
+    oldPopup.remove();
+  }
+
+  const popup = document.createElement("div");
+
+  popup.id = "nooreAlertPopup";
+  popup.className = "noore-alert-popup";
+
+  popup.innerHTML = `
+    <div class="noore-alert-icon">✓</div>
+
+    <div class="noore-alert-content">
+      <div class="noore-alert-title">
+        Added to Cart
+      </div>
+
+      <div class="noore-alert-message">
+        ${escapeHTML(String(message))}
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="noore-alert-close"
+      onclick="closeNooreAlert()"
+    >
+      ×
+    </button>
+  `;
+
+  document.body.appendChild(popup);
+
+  setTimeout(() => {
+    popup.classList.add("show");
+  }, 30);
+
+  setTimeout(() => {
+    closeNooreAlert();
+  }, 3500);
+};
+
+
+function closeNooreAlert() {
+
+  const popup = document.getElementById("nooreAlertPopup");
+
+  if (!popup) return;
+
+  popup.classList.remove("show");
+
+  setTimeout(() => {
+    popup.remove();
+  }, 350);
+}
+
       const API_URL = "https://noore-n2oa.vercel.app/api";
       let products = [];
       let cart = JSON.parse(localStorage.getItem("nooreCart") || "[]");
