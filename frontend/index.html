@@ -1013,6 +1013,111 @@
         margin-top: 17px;
       }
 
+
+      /* =========================
+   PRODUCT DETAILS
+========================= */
+
+.product-details-modal-box {
+  max-width: 850px;
+  padding: 30px;
+}
+
+#productDetailsContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 35px;
+  align-items: center;
+}
+
+.product-details-image {
+  width: 100%;
+  height: 430px;
+  background: #fffaf7;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-details-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-details-no-image {
+  font-family: "Playfair Display", serif;
+  font-size: 28px;
+  color: #a75d69;
+}
+
+.product-details-category {
+  color: #a75d69;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.product-details-info h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.product-details-price {
+  font-size: 22px;
+  font-weight: 700;
+  color: #8e4b58;
+  margin-bottom: 20px;
+}
+
+.product-details-description {
+  color: #766b6e;
+  line-height: 1.7;
+  margin-bottom: 18px;
+}
+
+.product-details-stock {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.product-details-info .primary-btn {
+  width: 100%;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+  .product-details-modal-box {
+    padding: 22px;
+  }
+
+  #productDetailsContent {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .product-details-image {
+    height: 320px;
+  }
+
+  .product-details-info h2 {
+    font-size: 26px;
+  }
+
+}
+
+
       /* Animations */
 
       @keyframes successPopup {
@@ -1213,7 +1318,26 @@
   }
 }
 
-    </style>
+    
+/* ========================= PRODUCT DETAILS ========================= */
+.product-details-modal-box { max-width:850px; padding:30px; }
+#productDetailsContent { display:grid; grid-template-columns:1fr 1fr; gap:35px; align-items:center; }
+.product-details-image { width:100%; height:430px; background:#fffaf7; border-radius:14px; overflow:hidden; display:flex; align-items:center; justify-content:center; }
+.product-details-image img { width:100%; height:100%; object-fit:cover; }
+.product-details-no-image { font-family:"Playfair Display",serif; font-size:28px; color:#a75d69; }
+.product-details-category { color:#a75d69; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+.product-details-info h2 { font-family:"Playfair Display",serif; font-size:32px; margin-bottom:12px; }
+.product-details-price { font-size:22px; font-weight:700; color:#8e4b58; margin-bottom:20px; }
+.product-details-description { color:#766b6e; line-height:1.7; margin-bottom:18px; }
+.product-details-stock { font-size:14px; font-weight:600; margin-bottom:20px; }
+.product-details-info .primary-btn { width:100%; }
+@media (max-width:700px) {
+  .product-details-modal-box { padding:22px; }
+  #productDetailsContent { grid-template-columns:1fr; gap:20px; }
+  .product-details-image { height:320px; }
+  .product-details-info h2 { font-size:26px; }
+}
+</style>
   </head>
 
   <body>
@@ -1689,6 +1813,28 @@
       </div>
     </div>
 
+    <!-- =========================
+     PRODUCT DETAILS MODAL
+========================= -->
+
+<div class="modal" id="productDetailsModal">
+
+  <div class="modal-box product-details-modal-box">
+
+    <button
+      class="close-btn"
+      onclick="closeProduct()"
+      aria-label="Close"
+    >
+      ×
+    </button>
+
+    <div id="productDetailsContent"></div>
+
+  </div>
+
+</div>
+
     <script>
       const API_URL = "https://noore-n2oa.vercel.app/api";
       let products = [];
@@ -1720,26 +1866,32 @@
           container.innerHTML = ` <div style=" grid-column:1/-1; text-align:center; padding:40px; color:#766b6e; "> <h3>Unable to load products</h3> <p>Products could not be loaded.</p> </div> `;
         }
       }
-      /* ========================= DISPLAY PRODUCTS ========================= */ function displayProducts(
-        productList = products,
-      ) {
-        const container = document.getElementById("products");
-        container.innerHTML = "";
-        if (productList.length === 0) {
-          container.innerHTML = ` <div style=" grid-column:1/-1; text-align:center; padding:50px; color:#766b6e; "> <h3>No products available</h3> <p>Products will appear here once added to database.</p> </div> `;
-          return;
-        }
-        productList.forEach((product, index) => {
-          let imageHTML = "";
-          if (product.image && product.image.trim() !== "") {
-            imageHTML = ` <img src="${escapeHTML(product.image)}" alt="${escapeHTML(product.name)}" loading="lazy" > `;
-          } else {
-            imageHTML = ` Product Image ${index + 1} <br> Add product photo `;
-          }
-          container.innerHTML += ` <div class="product-card"> <div class="product-image"> ${imageHTML} </div> <div class="product-info"> <div class="product-category"> ${escapeHTML(product.category)} </div> <div class="product-name"> ${escapeHTML(product.name)} </div> <div class="product-price"> Rs. ${Number(product.price).toLocaleString()} </div> <button class="primary-btn order-btn" onclick="addToCart(${product.id})" > 🛒 Add to Cart </button> </div> </div> `;
-        });
-      }
-      /* ========================= FILTER PRODUCTS ========================= */ function filterProducts(
+    /* ========================= DISPLAY PRODUCTS ========================= */
+function displayProducts(productList = products) {
+  const container = document.getElementById("products");
+  container.innerHTML = "";
+  if (productList.length === 0) {
+    container.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:50px;color:#766b6e;"><h3>No products available</h3><p>Products will appear here once added to database.</p></div>`;
+    return;
+  }
+  productList.forEach((product, index) => {
+    const imageHTML = product.image && product.image.trim() !== ""
+      ? `<img src="${escapeHTML(product.image)}" alt="${escapeHTML(product.name)}" loading="lazy">`
+      : `Product Image ${index + 1}<br>Add product photo`;
+    container.innerHTML += `
+      <div class="product-card" onclick="openProduct(${product.id})" style="cursor:pointer;">
+        <div class="product-image">${imageHTML}</div>
+        <div class="product-info">
+          <div class="product-category">${escapeHTML(product.category)}</div>
+          <div class="product-name">${escapeHTML(product.name)}</div>
+          <div class="product-price">Rs. ${Number(product.price).toLocaleString()}</div>
+          <button class="primary-btn order-btn" onclick="event.stopPropagation(); addToCart(${product.id})">🛒 Add to Cart</button>
+        </div>
+      </div>`;
+  });
+}
+
+/* ========================= FILTER PRODUCTS ========================= */ function filterProducts(
         category,
         button,
       ) {
@@ -1780,7 +1932,144 @@
         updateCartCount();
         
       }
-      /* ========================= SAVE CART ========================= */ function saveCart() {
+
+      /* ========================= PRODUCT DETAILS ========================= */
+
+function openProduct(productId) {
+
+  const product = products.find(
+    (item) => item.id == productId
+  );
+
+  if (!product) {
+    alert("Product not found.");
+    return;
+  }
+
+  const modal = document.getElementById("productDetailsModal");
+
+  if (!modal) {
+    return;
+  }
+
+  const image = product.image
+    ? `
+      <img
+        src="${escapeHTML(product.image)}"
+        alt="${escapeHTML(product.name)}"
+      >
+    `
+    : `
+      <div class="product-details-no-image">
+        NOORÉ
+      </div>
+    `;
+
+  document.getElementById("productDetailsContent").innerHTML = `
+
+    <div class="product-details-image">
+      ${image}
+    </div>
+
+    <div class="product-details-info">
+
+      <div class="product-details-category">
+        ${escapeHTML(product.category)}
+      </div>
+
+      <h2>
+        ${escapeHTML(product.name)}
+      </h2>
+
+      <div class="product-details-price">
+        Rs. ${Number(product.price).toLocaleString()}
+      </div>
+
+      <p class="product-details-description">
+        ${escapeHTML(
+          product.description ||
+          "Beautiful ladies suit from NOORÉ collection."
+        )}
+      </p>
+
+      <div class="product-details-stock">
+        ${
+          Number(product.stock) > 0
+            ? `✓ In Stock`
+            : `Currently unavailable`
+        }
+      </div>
+
+      ${
+        Number(product.stock) > 0
+          ? `
+            <button
+              class="primary-btn"
+              onclick="addToCart(${product.id}); closeProduct();"
+            >
+              🛒 Add to Cart
+            </button>
+          `
+          : `
+            <button
+              class="primary-btn"
+              disabled
+              style="opacity:.5;cursor:not-allowed;"
+            >
+              Out of Stock
+            </button>
+          `
+      }
+
+    </div>
+  `;
+
+  modal.classList.add("active");
+}
+
+
+/* ========================= CLOSE PRODUCT ========================= */
+
+function closeProduct() {
+
+  const modal =
+    document.getElementById("productDetailsModal");
+
+  if (modal) {
+    modal.classList.remove("active");
+  }
+}
+      /* ========================= PRODUCT DETAILS ========================= */
+function openProduct(productId) {
+  const product = products.find((item) => item.id == productId);
+  if (!product) { alert("Product not found."); return; }
+  const modal = document.getElementById("productDetailsModal");
+  const content = document.getElementById("productDetailsContent");
+  if (!modal || !content) return;
+  const image = product.image
+    ? `<img src="${escapeHTML(product.image)}" alt="${escapeHTML(product.name)}">`
+    : `<div class="product-details-no-image">NOORÉ</div>`;
+  content.innerHTML = `
+    <div class="product-details-image">${image}</div>
+    <div class="product-details-info">
+      <div class="product-details-category">${escapeHTML(product.category)}</div>
+      <h2>${escapeHTML(product.name)}</h2>
+      <div class="product-details-price">Rs. ${Number(product.price).toLocaleString()}</div>
+      <p class="product-details-description">${escapeHTML(product.description || "Beautiful ladies suit from NOORÉ collection.")}</p>
+      <div class="product-details-stock">${Number(product.stock) > 0 ? "✓ In Stock" : "Currently unavailable"}</div>
+      ${Number(product.stock) > 0
+        ? `<button class="primary-btn" onclick="addToCart(${product.id}); closeProduct();">🛒 Add to Cart</button>`
+        : `<button class="primary-btn" disabled style="opacity:.5;cursor:not-allowed;">Out of Stock</button>`}
+    </div>`;
+  modal.classList.add("active");
+}
+
+function closeProduct() {
+  const modal = document.getElementById("productDetailsModal");
+  if (modal) modal.classList.remove("active");
+}
+
+/* ========================= SAVE CART ========================= */ function saveCart() {
         localStorage.setItem("nooreCart", JSON.stringify(cart));
       }
       /* ========================= CART COUNT ========================= */ function updateCartCount() {
@@ -2065,5 +2354,13 @@ function closeMobileMenu() {
   menu.classList.remove("active");
 }
     </script>
-  </body>
+  
+<!-- PRODUCT DETAILS MODAL -->
+<div class="modal" id="productDetailsModal">
+  <div class="modal-box product-details-modal-box">
+    <button class="close-btn" onclick="closeProduct()" aria-label="Close">×</button>
+    <div id="productDetailsContent"></div>
+  </div>
+</div>
+</body>
 </html>
