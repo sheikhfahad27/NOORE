@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Track Order | NOORÉ</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background: #f8f5f0;
+        color: #222;
+        min-height: 100vh;
+      }
+
+      .navbar {
+        background: #fff;
+        padding: 18px 7%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      }
+
+      .logo {
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        color: #222;
+      }
+
+      .home-btn {
+        text-decoration: none;
+        color: #222;
+        border: 1px solid #222;
+        padding: 10px 18px;
+        border-radius: 6px;
+        transition: 0.3s;
+      }
+
+      .home-btn:hover {
+        background: #222;
+        color: #fff;
+      }
+
+      .container {
+        width: 90%;
+        max-width: 700px;
+        margin: 70px auto;
+      }
+
+      .tracking-box {
+        background: #fff;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+      }
+
+      .tracking-box h1 {
+        text-align: center;
+        font-size: 34px;
+        margin-bottom: 10px;
+      }
+
+      .tracking-box > p {
+        text-align: center;
+        color: #777;
+        margin-bottom: 30px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 14px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+        outline: none;
+      }
+
+      .form-group input:focus {
+        border-color: #222;
+      }
+
+      .track-btn {
+        width: 100%;
+        padding: 15px;
+        border: none;
+        background: #222;
+        color: #fff;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .track-btn:hover {
+        background: #000;
+      }
+
+      .message {
+        display: none;
+        margin-top: 20px;
+        padding: 14px;
+        border-radius: 8px;
+        text-align: center;
+      }
+
+      .error {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .success {
+        background: #dcfce7;
+        color: #166534;
+      }
+
+      .order-result {
+        display: none;
+        margin-top: 35px;
+      }
+
+      .order-result h2 {
+        margin-bottom: 20px;
+      }
+
+      .order-info {
+        background: #f8f8f8;
+        padding: 20px;
+        border-radius: 10px;
+      }
+
+      .info-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 12px 0;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .info-row:last-child {
+        border-bottom: none;
+      }
+
+      .info-label {
+        font-weight: 600;
+      }
+
+      .status {
+        display: inline-block;
+        padding: 7px 14px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .status.pending {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .status.confirmed {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+
+      .status.shipped {
+        background: #e0e7ff;
+        color: #3730a3;
+      }
+
+      .status.delivered {
+        background: #dcfce7;
+        color: #166534;
+      }
+
+      .status.cancelled {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .tracking {
+        margin-top: 35px;
+      }
+
+      .tracking-step {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 18px;
+      }
+
+      .circle {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #ddd;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        flex-shrink: 0;
+      }
+
+      .tracking-step.completed .circle,
+      .tracking-step.active .circle {
+        background: #222;
+        color: #fff;
+      }
+
+      .tracking-step.active {
+        font-weight: 700;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          margin: 35px auto;
+        }
+
+        .tracking-box {
+          padding: 25px 20px;
+        }
+
+        .tracking-box h1 {
+          font-size: 28px;
+        }
+
+        .navbar {
+          padding: 15px 5%;
+        }
+
+        .logo {
+          font-size: 23px;
+        }
+
+        .info-row {
+          flex-direction: column;
+          gap: 5px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <div class="logo">NOORÉ</div>
+
+      <a href="index.html" class="home-btn"> Home </a>
+    </nav>
+
+    <div class="container">
+      <div class="tracking-box">
+        <h1>Track Your Order</h1>
+
+        <p>Enter your Order ID and phone number to check your order status.</p>
+
+        <form id="trackingForm">
+          <div class="form-group">
+            <label for="orderId"> Order ID </label>
+
+            <input
+              type="number"
+              id="orderId"
+              placeholder="Example: 1"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="phone"> Phone Number </label>
+
+            <input
+              type="text"
+              id="phone"
+              placeholder="Example: 03001234567"
+              required
+            />
+          </div>
+
+          <button type="submit" class="track-btn">Track Order</button>
+        </form>
+
+        <div id="message" class="message"></div>
+
+        <div id="orderResult" class="order-result">
+          <h2>Order Details</h2>
+
+          <div class="order-info">
+            <div class="info-row">
+              <span class="info-label"> Order ID </span>
+
+              <span id="resultId"></span>
+            </div>
+
+            <div class="info-row">
+              <span class="info-label"> Customer </span>
+
+              <span id="resultName"></span>
+            </div>
+
+            <div class="info-row">
+              <span class="info-label"> Product </span>
+
+              <span id="resultProduct"></span>
+            </div>
+
+            <div class="info-row">
+              <span class="info-label"> Size </span>
+
+              <span id="resultSize"></span>
+            </div>
+
+            <div class="info-row">
+              <span class="info-label"> Quantity </span>
+
+              <span id="resultQuantity"></span>
+            </div>
+
+            <div class="info-row">
+              <span class="info-label"> Total </span>
+
+              <span id="resultTotal"></span>
+            </div>
+
+            <div class="info-row">
+              <span class="info-label"> City </span>
+
+              <span id="resultCity"></span>
+            </div>
+
+            <div class="info-row">
+              <span class="info-label"> Order Status </span>
+
+              <span id="resultStatus"></span>
+            </div>
+          </div>
+
+          <div class="tracking">
+            <h2>Order Progress</h2>
+
+            <div class="tracking-step" id="stepPending">
+              <div class="circle">1</div>
+              <span>Order Placed</span>
+            </div>
+
+            <div class="tracking-step" id="stepConfirmed">
+              <div class="circle">2</div>
+              <span>Order Confirmed</span>
+            </div>
+
+            <div class="tracking-step" id="stepShipped">
+              <div class="circle">3</div>
+              <span>Shipped</span>
+            </div>
+
+            <div class="tracking-step" id="stepDelivered">
+              <div class="circle">4</div>
+              <span>Delivered</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const API_URL = "https://noore-n2oa.vercel.app/api";
+
+      const form = document.getElementById("trackingForm");
+
+      const message = document.getElementById("message");
+
+      const orderResult = document.getElementById("orderResult");
+
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const orderId = document.getElementById("orderId").value.trim();
+
+        const phone = document.getElementById("phone").value.trim();
+
+        message.style.display = "none";
+
+        orderResult.style.display = "none";
+
+        try {
+          const response = await fetch(
+            `${API_URL}/orders/track?orderId=${encodeURIComponent(orderId)}&phone=${encodeURIComponent(phone)}`,
+          );
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.message || "Order not found");
+          }
+
+          const order = data.order;
+
+          document.getElementById("resultId").textContent = "#" + order.id;
+
+          document.getElementById("resultName").textContent =
+            order.customerName;
+
+          document.getElementById("resultProduct").textContent = order.product;
+
+          document.getElementById("resultSize").textContent = order.size;
+
+          document.getElementById("resultQuantity").textContent =
+            order.quantity;
+
+          document.getElementById("resultTotal").textContent =
+            "Rs. " + Number(order.totalPrice).toLocaleString();
+
+          document.getElementById("resultCity").textContent = order.city;
+
+          const statusElement = document.getElementById("resultStatus");
+
+          statusElement.textContent = order.status;
+
+          statusElement.className = "status " + order.status.toLowerCase();
+
+          updateTracking(order.status);
+
+          orderResult.style.display = "block";
+
+          message.textContent = "Order found successfully.";
+
+          message.className = "message success";
+
+          message.style.display = "block";
+        } catch (error) {
+          message.textContent = error.message;
+
+          message.className = "message error";
+
+          message.style.display = "block";
+        }
+      });
+
+      function updateTracking(status) {
+        const steps = [
+          document.getElementById("stepPending"),
+          document.getElementById("stepConfirmed"),
+          document.getElementById("stepShipped"),
+          document.getElementById("stepDelivered"),
+        ];
+
+        steps.forEach((step) => {
+          step.classList.remove("completed", "active");
+        });
+
+        const statusIndex = {
+          Pending: 0,
+          Confirmed: 1,
+          Shipped: 2,
+          Delivered: 3,
+          Cancelled: -1,
+        };
+
+        const currentIndex = statusIndex[status];
+
+        if (status === "Cancelled") {
+          return;
+        }
+
+        steps.forEach((step, index) => {
+          if (index < currentIndex) {
+            step.classList.add("completed");
+          }
+
+          if (index === currentIndex) {
+            step.classList.add("active");
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
