@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>NOORÉ | Ladies Suits</title>
+    <title>Sheikh Brothers | Fashions women</title>
     <meta
       name="description"
       content="Shop elegant ladies suits online. Cash on Delivery available across Pakistan."
@@ -1018,6 +1018,11 @@
    PRODUCT DETAILS
 ========================= */
 
+.product-size-box { margin-top: 15px; }
+.product-size-label { display:block; font-weight:700; font-size:14px; margin-bottom:8px; }
+.product-size-select { width:100%; padding:12px 14px; border:1px solid #eadfdb; border-radius:10px; background:#fff; color:#241d1f; font-size:14px; outline:none; }
+.product-size-select:focus { border-color:#a75d69; box-shadow:0 0 0 3px rgba(167,93,105,.10); }
+
 .product-details-modal-box {
   max-width: 850px;
   padding: 30px;
@@ -1117,6 +1122,28 @@
 
 }
 
+
+      .product-size-label {
+        display: block;
+        font-size: 13px;
+        font-weight: 700;
+        margin: 18px 0 7px;
+      }
+
+      .product-size-select {
+        width: 100%;
+        padding: 11px 12px;
+        border: 1px solid #ded4d1;
+        border-radius: 8px;
+        background: white;
+        font-family: inherit;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .product-size-select:focus {
+        border-color: #a75d69;
+      }
 
       /* Animations */
 
@@ -1337,6 +1364,36 @@
   .product-details-image { height:320px; }
   .product-details-info h2 { font-size:26px; }
 }
+
+.product-size-box {
+  margin: 18px 0 6px;
+}
+.product-size-label {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.product-size-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.size-option {
+  min-width: 65px;
+  padding: 10px 16px;
+  border: 1px solid #d8c8c3;
+  border-radius: 8px;
+  background: #fff;
+  color: #241d1f;
+  cursor: pointer;
+  font-weight: 600;
+}
+.size-option:hover,
+.size-option.active {
+  background: #a75d69;
+  border-color: #a75d69;
+  color: #fff;
+}
 </style>
   </head>
 
@@ -1547,7 +1604,7 @@
         <div>
           <strong> Order & Contact </strong>
 
-          <p>WhatsApp: 0371-1223715</p>
+          <p>WhatsApp: 0317-2606993</p>
 
           <p>Cash on Delivery Available</p>
         </div>
@@ -1617,7 +1674,7 @@
             ></textarea>
           </div>
 
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label> Size </label>
 
             <select id="customerSize" class="form-control">
@@ -1631,7 +1688,7 @@
 
               <option>XL</option>
             </select>
-          </div>
+          </div> -->
 
           <button type="submit" class="primary-btn full-btn">
             Confirm Order on WhatsApp
@@ -1730,7 +1787,7 @@
             ></textarea>
           </div>
 
-          <div class="form-group">
+          <!-- <div class="form-group">
             <label>Size</label>
 
             <select id="checkoutSize" class="form-control" required>
@@ -1744,7 +1801,7 @@
 
               <option value="XL">XL</option>
             </select>
-          </div>
+          </div> -->
 
           <button type="submit" class="primary-btn full-btn">
             Confirm Order on WhatsApp
@@ -1933,122 +1990,20 @@ function displayProducts(productList = products) {
         
       }
 
-      /* ========================= PRODUCT DETAILS ========================= */
+      /* ========================= PRODUCT DETAILS + SIZE ========================= */
 
-function openProduct(productId) {
-
-  const product = products.find(
-    (item) => item.id == productId
-  );
-
-  if (!product) {
-    alert("Product not found.");
-    return;
-  }
-
-  const modal = document.getElementById("productDetailsModal");
-
-  if (!modal) {
-    return;
-  }
-
-  const image = product.image
-    ? `
-      <img
-        src="${escapeHTML(product.image)}"
-        alt="${escapeHTML(product.name)}"
-      >
-    `
-    : `
-      <div class="product-details-no-image">
-        NOORÉ
-      </div>
-    `;
-
-  document.getElementById("productDetailsContent").innerHTML = `
-
-    <div class="product-details-image">
-      ${image}
-    </div>
-
-    <div class="product-details-info">
-
-      <div class="product-details-category">
-        ${escapeHTML(product.category)}
-      </div>
-
-      <h2>
-        ${escapeHTML(product.name)}
-      </h2>
-
-      <div class="product-details-price">
-        Rs. ${Number(product.price).toLocaleString()}
-      </div>
-
-      <p class="product-details-description">
-        ${escapeHTML(
-          product.description ||
-          "Beautiful ladies suit from NOORÉ collection."
-        )}
-      </p>
-
-      <div class="product-details-stock">
-        ${
-          Number(product.stock) > 0
-            ? `✓ In Stock`
-            : `Currently unavailable`
-        }
-      </div>
-
-      ${
-        Number(product.stock) > 0
-          ? `
-            <button
-              class="primary-btn"
-              onclick="addToCart(${product.id}); closeProduct();"
-            >
-              🛒 Add to Cart
-            </button>
-          `
-          : `
-            <button
-              class="primary-btn"
-              disabled
-              style="opacity:.5;cursor:not-allowed;"
-            >
-              Out of Stock
-            </button>
-          `
-      }
-
-    </div>
-  `;
-
-  modal.classList.add("active");
-}
-
-
-/* ========================= CLOSE PRODUCT ========================= */
-
-function closeProduct() {
-
-  const modal =
-    document.getElementById("productDetailsModal");
-
-  if (modal) {
-    modal.classList.remove("active");
-  }
-}
-      /* ========================= PRODUCT DETAILS ========================= */
 function openProduct(productId) {
   const product = products.find((item) => item.id == productId);
   if (!product) { alert("Product not found."); return; }
+
   const modal = document.getElementById("productDetailsModal");
   const content = document.getElementById("productDetailsContent");
   if (!modal || !content) return;
+
   const image = product.image
     ? `<img src="${escapeHTML(product.image)}" alt="${escapeHTML(product.name)}">`
     : `<div class="product-details-no-image">NOORÉ</div>`;
+
   content.innerHTML = `
     <div class="product-details-image">${image}</div>
     <div class="product-details-info">
@@ -2056,12 +2011,65 @@ function openProduct(productId) {
       <h2>${escapeHTML(product.name)}</h2>
       <div class="product-details-price">Rs. ${Number(product.price).toLocaleString()}</div>
       <p class="product-details-description">${escapeHTML(product.description || "Beautiful ladies suit from NOORÉ collection.")}</p>
-      <div class="product-details-stock">${Number(product.stock) > 0 ? "✓ In Stock" : "Currently unavailable"}</div>
-      ${Number(product.stock) > 0
-        ? `<button class="primary-btn" onclick="addToCart(${product.id}); closeProduct();">🛒 Add to Cart</button>`
-        : `<button class="primary-btn" disabled style="opacity:.5;cursor:not-allowed;">Out of Stock</button>`}
+      <div class="product-details-stock">
+        ${Number(product.stock) > 0 ? "✓ In Stock" : "Currently unavailable"}
+      </div>
+
+      <div class="product-size-box">
+        <label class="product-size-label">Select Size</label>
+        <div class="product-size-options">
+          <button type="button" class="size-option" onclick="selectProductSize(this, 'UT')">UT</button>
+          <button type="button" class="size-option" onclick="selectProductSize(this, 'Small')">Small</button>
+          <button type="button" class="size-option" onclick="selectProductSize(this, 'Medium')">Medium</button>
+          <button type="button" class="size-option" onclick="selectProductSize(this, 'Large')">Large</button>
+          <button type="button" class="size-option" onclick="selectProductSize(this, 'XL')">XL</button>
+        </div>
+        <input type="hidden" id="productSizeSelect" value="">
+      </div>
+
+      <button type="button" class="primary-btn" style="margin-top:12px;width:100%;"
+        onclick="addProductWithSize(${product.id})" ${Number(product.stock) <= 0 ? "disabled" : ""}>
+        ${Number(product.stock) > 0 ? "🛒 Add to Cart" : "Out of Stock"}
+      </button>
     </div>`;
+
   modal.classList.add("active");
+}
+
+function selectProductSize(button, size) {
+  document.querySelectorAll('.size-option').forEach((btn) => btn.classList.remove('active'));
+  button.classList.add('active');
+  const sizeInput = document.getElementById('productSizeSelect');
+  if (sizeInput) sizeInput.value = size;
+}
+
+function addProductWithSize(productId) {
+  const product = products.find((item) => item.id == productId);
+  if (!product) { alert("Product not found."); return; }
+  if (Number(product.stock) <= 0) { alert("This product is currently out of stock."); return; }
+
+  const sizeSelect = document.getElementById("productSizeSelect");
+  const size = sizeSelect ? sizeSelect.value : "";
+  if (!size) { alert("Please select a size first."); return; }
+
+  const existing = cart.find((item) => item.id == product.id && item.size === size);
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push({
+      id: product.id,
+      name: product.name,
+      price: Number(product.price),
+      image: product.image || "",
+      quantity: 1,
+      size: size
+    });
+  }
+
+  saveCart();
+  updateCartCount();
+  closeProduct();
+  alert(`${product.name} (${size}) added to cart!`);
 }
 
 function closeProduct() {
@@ -2113,7 +2121,8 @@ function closeProduct() {
           .map((item, index) => {
             const itemTotal = Number(item.price) * Number(item.quantity);
             total += itemTotal;
-            return ` <div class="cart-item"> <div class="cart-item-image"> ${item.image ? ` <img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.name)}" > ` : ` <div style=" height:100%; display:flex; align-items:center; justify-content:center; font-weight:700; "> NOORÉ </div> `} </div> <div class="cart-item-info"> <div class="cart-item-name"> ${escapeHTML(item.name)} </div> <div class="cart-item-price"> Rs. ${Number(item.price).toLocaleString()} </div> <div class="quantity-control"> <button type="button" onclick="changeQuantity(${index}, -1)" > − </button> <span> ${item.quantity} </span> <button type="button" onclick="changeQuantity(${index}, 1)" > + </button> </div> </div> <div style=" margin-left:auto; text-align:right; "> <strong> Rs. ${itemTotal.toLocaleString()} </strong> <br> <button type="button" class="remove-cart" onclick="removeFromCart(${index})" > × </button> </div> </div> `;
+            return ` <div class="cart-item"> <div class="cart-item-image"> ${item.image ? ` <img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.name)}" > ` : ` <div style=" height:100%; display:flex; align-items:center; justify-content:center; font-weight:700; "> NOORÉ </div> `} </div> <div class="cart-item-info"> <div class="cart-item-name"> ${escapeHTML(item.name)} </div> <div class="cart-item-price"> Rs. ${Number(item.price).toLocaleString()} </div>
+<div style="font-size:12px;color:#766b6e;margin-top:3px;">Size: ${escapeHTML(item.size || "Not specified")}</div> <div class="quantity-control"> <button type="button" onclick="changeQuantity(${index}, -1)" > − </button> <span> ${item.quantity} </span> <button type="button" onclick="changeQuantity(${index}, 1)" > + </button> </div> </div> <div style=" margin-left:auto; text-align:right; "> <strong> Rs. ${itemTotal.toLocaleString()} </strong> <br> <button type="button" class="remove-cart" onclick="removeFromCart(${index})" > × </button> </div> </div> `;
           })
           .join("");
         totalElement.textContent = `Rs. ${total.toLocaleString()}`;
@@ -2156,7 +2165,7 @@ function closeProduct() {
           .map((item) => {
             const itemTotal = Number(item.price) * Number(item.quantity);
             total += itemTotal;
-            return ` <div style=" display:flex; justify-content:space-between; gap:15px; margin-bottom:8px; "> <span> ${escapeHTML(item.name)} × ${item.quantity} </span> <strong> Rs. ${itemTotal.toLocaleString()} </strong> </div> `;
+            return ` <div style=" display:flex; justify-content:space-between; gap:15px; margin-bottom:8px; "> <span> ${escapeHTML(item.name)} × ${item.quantity}<small style="display:block;color:#766b6e;margin-top:2px;">Size: ${escapeHTML(item.size || "Not specified")}</small> </span> <strong> Rs. ${itemTotal.toLocaleString()} </strong> </div> `;
           })
           .join("");
         summary.innerHTML = ` ${itemsHTML} <div style=" border-top:1px solid #eadfdb; margin-top:10px; padding-top:10px; display:flex; justify-content:space-between; "> <strong>Total</strong> <strong> Rs. ${total.toLocaleString()} </strong> </div> `;
@@ -2231,7 +2240,7 @@ function closeProduct() {
           0,
         );
         /* PRODUCTS */ const productText = cart
-          .map((item) => `${item.name} x${item.quantity}`)
+          .map((item) => `${item.name} x${item.quantity} (Size: ${item.size || "Not specified"})`)
           .join(", ");
         /* ORDER DATA */ const orderData = {
           customerName: name,
@@ -2240,7 +2249,7 @@ function closeProduct() {
           address: address,
           product: productText,
           productId: cart.length === 1 ? cart[0].id : null,
-          size: size,
+          size: cart.length === 1 ? (cart[0].size || size) : cart.map((item) => item.size || "Not specified").join(", "),
           quantity: totalQuantity,
           totalPrice: totalPrice,
         };
@@ -2274,7 +2283,7 @@ function closeProduct() {
                 `• ${item.name} x${item.quantity} - Rs. ${(Number(item.price) * Number(item.quantity)).toLocaleString()}`,
             )
             .join("\n");
-          /* WHATSAPP MESSAGE */ const message = `New Order - NOORÉ Products: ${whatsappProducts} Total: Rs. ${totalPrice.toLocaleString()} Customer Name: ${name} Phone: ${phone} City: ${city} Address: ${address} Size: ${size} Total Quantity: ${totalQuantity} Payment: Cash on Delivery Order ID: #${result.id}`;
+          /* WHATSAPP MESSAGE */ const message = `New Order - NOORÉ Products: ${whatsappProducts} Total: Rs. ${totalPrice.toLocaleString()} Customer Name: ${name} Phone: ${phone} City: ${city} Address: ${address} Sizes: ${cart.map((item) => `${item.name}: ${item.size || "Not specified"}`).join(" | ")} Total Quantity: ${totalQuantity} Payment: Cash on Delivery Order ID: #${result.id}`;
           /* WHATSAPP NUMBER */ const whatsappNumber = "923172606993";
           const whatsappURL =
             "https://wa.me/" +
