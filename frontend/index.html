@@ -83,19 +83,28 @@
         justify-content: space-between;
       }
 
-      .logo {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        line-height: 0;
-      }
+     .logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+}
 
-      .logo img {
-        width: 58px;
-        height: 58px;
-        object-fit: contain;
-        display: block;
-      }
+.logo img {
+    width: 105px;
+    height: 105px;
+    object-fit: contain;
+    display: block;
+}
+
+.brand-text {
+    font-family: "Georgia", serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #C9A45C;
+    white-space: nowrap;
+}
 
       .nav-links {
         display: flex;
@@ -1016,6 +1025,23 @@
           padding: 13px;
         }
       }
+
+      @media (max-width: 768px) {
+
+    .logo {
+        gap: 8px;
+    }
+
+    .logo img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .brand-text {
+        font-size: 14px;
+        letter-spacing: 1px;
+    }
+}
     </style>
   </head>
 
@@ -1034,9 +1060,10 @@
 
     <header>
       <div class="container navbar">
-        <a href="#" class="logo" aria-label="NOORÉ Home">
-          <img src="assets/noore-logo.png" alt="Sheikh Brothers logo" />
-        </a>
+        <a href="#" class="logo">
+    <img src="assets/noore-logo.png" alt="NOORÉ Logo">
+    <span class="brand-text">SHEIKH BROTHERS</span>
+</a>
 
         <nav class="nav-links">
           <a href="#shop">Shop</a>
