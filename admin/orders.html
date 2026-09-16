@@ -263,7 +263,7 @@
 
       th,
       td {
-        padding: 14px 15px;
+        padding: 7px 6px;
         text-align: left;
         border-bottom: 1px solid var(--border);
         font-size: 13px;
@@ -485,6 +485,26 @@
         background: #1ebe5d;
       }
 
+      .delete-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.delete-btn:hover {
+    background: #b02a37;
+}
+
+.delete-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
       @media (max-width: 1100px) {
         .stats {
           grid-template-columns: repeat(3, 1fr);
@@ -700,6 +720,7 @@
                 <th>Status</th>
                 <th>WhatsApp</th>
                 <th>Date</th>
+                <th>Action</th>
               </tr>
             </thead>
 
@@ -993,6 +1014,15 @@
                 </div>
 
               </td>
+
+              <td>
+    <button
+        class="delete-btn"
+        onclick="deleteOrder(${order.id}, this)"
+    >
+        🗑️ Delete
+    </button>
+</td>
 
             </tr>
 
@@ -1406,6 +1436,69 @@ Thank you for shopping with NOORÉ.`;
       /* ================= START ================= */
 
       loadOrders();
+
+      async function deleteOrder(id, buttonElement) {
+    const order = orders.find(
+        item => Number(item.id) === Number(id)
+    );
+
+    if (!order) {
+        alert("Order not found.");
+        return;
+    }
+
+    const confirmed = confirm(
+        `Are you sure you want to delete Order #${id}?\n\n` +
+        `Customer: ${order.customerName}\n` +
+        `Product: ${order.product}\n\n` +
+        `This action cannot be undone.`
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+        buttonElement.disabled = true;
+        buttonElement.textContent = "Deleting...";
+
+        const response = await fetch(
+            `${API_URL}/orders/${id}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(
+                data.message || "Failed to delete order"
+            );
+        }
+
+        // Frontend list se bhi remove
+        orders = orders.filter(
+            item => Number(item.id) !== Number(id)
+        );
+
+        updateStats();
+        filterOrders();
+
+        alert(`Order #${id} deleted successfully.`);
+
+    } catch (error) {
+        console.error("Delete Order Error:", error);
+
+        alert(
+            "Unable to delete order.\n\n" +
+            error.message
+        );
+
+        buttonElement.disabled = false;
+        buttonElement.textContent = "🗑️ Delete";
+    }
+}
     </script>
   </body>
 </html>
