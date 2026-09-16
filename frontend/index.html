@@ -2185,11 +2185,15 @@ function updateProductSchema(products) {
   const schemaProducts = products.map((product) => ({
     "@context": "https://schema.org",
     "@type": "Product",
-    "name": product.name,
-    "image": product.image ? [product.image] : [],
-    "description":
-      product.description ||
-      `${product.name} available at Sheikh Brothers.`,
+   "name": product.name,
+"image": product.image ? [product.image] : [],
+"description":
+  product.description ||
+  `${product.name} available at Sheikh Brothers.`,
+"brand": {
+  "@type": "Brand",
+  "name": "Sheikh Brothers"
+},
     "offers": {
       "@type": "Offer",
       "url": "https://sheikh-brothers.vercel.app/",
