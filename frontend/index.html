@@ -4,11 +4,31 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Sheikh Brothers | Fashions women</title>
-    <meta
-      name="description"
-      content="Shop elegant ladies suits online. Cash on Delivery available across Pakistan."
-    />
+    <title>Sheikh Brothers | Ladies Suits Online in Pakistan</title>
+
+
+    <meta name="description" content="Shop stylish ladies suits online at Sheikh Brothers. Discover beautiful 2 piece and 3 piece suits with Cash on Delivery across Pakistan.">
+
+<meta name="keywords" content="ladies suits online Pakistan, women suits Pakistan, 2 piece suits, 3 piece suits, ladies clothing Pakistan, Sheikh Brothers">
+
+<meta name="author" content="Sheikh Brothers">
+
+<link rel="canonical" href="https://sheikh-brothers.vercel.app/">
+
+
+ <meta property="og:title" content="Sheikh Brothers | Ladies Suits Online in Pakistan">
+<meta property="og:description" content="Shop stylish ladies suits online at Sheikh Brothers with Cash on Delivery across Pakistan.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sheikh-brothers.vercel.app/">
+<meta property="og:image" content="https://sheikh-brothers.vercel.app/assets/noore-logo.png">
+
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sheikh Brothers | Ladies Suits Online in Pakistan">
+<meta name="twitter:description" content="Shop stylish ladies suits online at Sheikh Brothers with Cash on Delivery across Pakistan.">
+<meta name="twitter:image" content="https://sheikh-brothers.vercel.app/assets/noore-logo.png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link
@@ -2098,7 +2118,9 @@ function closeNooreAlert() {
             throw new Error("Failed to load products");
           }
           products = await response.json();
-          displayProducts(products);
+
+displayProducts(products);
+updateProductSchema(products);
         } catch (error) {
           console.error("Product API Error:", error);
           container.innerHTML = ` <div style=" grid-column:1/-1; text-align:center; padding:40px; color:#766b6e; "> <h3>Unable to load products</h3> <p>Products could not be loaded.</p> </div> `;
@@ -2127,6 +2149,51 @@ function displayProducts(productList = products) {
         </div>
       </div>`;
   });
+}
+
+
+/* =========================
+   PRODUCT SEO SCHEMA
+========================= */
+
+function updateProductSchema(products) {
+  const oldSchema = document.getElementById("product-schema");
+
+  if (oldSchema) {
+    oldSchema.remove();
+  }
+
+  if (!products || products.length === 0) {
+    return;
+  }
+
+  const schemaProducts = products.map((product) => ({
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": product.name,
+    "image": product.image ? [product.image] : [],
+    "description":
+      product.description ||
+      `${product.name} available at Sheikh Brothers.`,
+    "offers": {
+      "@type": "Offer",
+      "url": "https://sheikh-brothers.vercel.app/",
+      "priceCurrency": "PKR",
+      "price": Number(product.price).toFixed(2),
+      "availability":
+        Number(product.stock) > 0
+          ? "https://schema.org/InStock"
+          : "https://schema.org/OutOfStock"
+    }
+  }));
+
+  const schema = document.createElement("script");
+
+  schema.type = "application/ld+json";
+  schema.id = "product-schema";
+  schema.textContent = JSON.stringify(schemaProducts);
+
+  document.head.appendChild(schema);
 }
 
 /* ========================= FILTER PRODUCTS ========================= */ function filterProducts(
@@ -2543,6 +2610,8 @@ function closeMobileMenu() {
 
   menu.classList.remove("active");
 }
+
+
     </script>
   
 <!-- PRODUCT DETAILS MODAL -->
