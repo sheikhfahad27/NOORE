@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sheikh-brothers.vercel.app/sitemap.xml
